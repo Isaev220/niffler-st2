@@ -1,4 +1,6 @@
 {
   "username": "emma",
-  "password": "12345"
+  "password": "12345",
+  "currency": "RUB",
+  "surname": "ivanova"
 }
