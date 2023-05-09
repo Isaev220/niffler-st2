@@ -13,8 +13,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class UserDataUpdateTest {
 
     private static final OkHttpClient httpClient = new OkHttpClient.Builder()
