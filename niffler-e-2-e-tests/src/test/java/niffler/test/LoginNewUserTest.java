@@ -2,61 +2,93 @@ package niffler.test;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 
 import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import java.io.IOException;
-import java.util.Arrays;
 import niffler.db.dao.NifflerUsersDAO;
 import niffler.db.dao.NifflerUsersDAOJdbc;
-import niffler.db.entity.Authority;
-import niffler.db.entity.AuthorityEntity;
 import niffler.db.entity.UserEntity;
-import niffler.jupiter.annotation.ClasspathUser;
-import niffler.model.UserJson;
-import org.junit.jupiter.api.BeforeEach;
+import niffler.jupiter.annotation.GenerateUser;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class LoginNewUserTest extends BaseWebTest {
 
-  private NifflerUsersDAO usersDAO = new NifflerUsersDAOJdbc();
-  private UserEntity ue;
+  private final NifflerUsersDAO usersDAO = new NifflerUsersDAOJdbc();
 
-  @BeforeEach
-  void createUserForTest() {
-    ue = new UserEntity();
-    ue.setUsername("valentin0");
-    ue.setPassword("12345");
-    ue.setEnabled(true);
-    ue.setAccountNonExpired(true);
-    ue.setAccountNonLocked(true);
-    ue.setCredentialsNonExpired(true);
-    ue.setAuthorities(Arrays.stream(Authority.values()).map(
-        a -> {
-          AuthorityEntity ae = new AuthorityEntity();
-          ae.setAuthority(a);
-          return ae;
-        }
-    ).toList());
-    usersDAO.createUser(ue);
-  }
-
+  @GenerateUser(
+          username = "igor",
+          password = "12345"
+  )
   @Test
-  void loginTest() throws IOException {
+  void loginTest(UserEntity user) {
     Allure.step("open page", () -> Selenide.open("http://127.0.0.1:3000/main"));
     $("a[href*='redirect']").click();
-    $("input[name='username']").setValue(ue.getUsername());
-    $("input[name='password']").setValue(ue.getPassword());
+    $("input[name='username']").setValue(user.getUsername());
+    $("input[name='password']").setValue(user.getPassword());
     $("button[type='submit']").click();
 
     $("a[href*='friends']").click();
     $(".header").should(visible).shouldHave(text("Niffler. The coin keeper."));
   }
 
+  @GenerateUser(
+          username = "igor",
+          password = "12345"
+  )
+  @Test
+  void checkUpdateUser(UserEntity user){
+
+    UserEntity updUserEntity = new UserEntity();
+    updUserEntity.setId(usersDAO.getUserId(user.getUsername()));
+    updUserEntity.setUsername(user.getUsername() + "-updated");
+    updUserEntity.setPassword("123456");
+    updUserEntity.setEnabled(false);
+    updUserEntity.setAccountNonExpired(false);
+    updUserEntity.setAccountNonLocked(false);
+    updUserEntity.setCredentialsNonExpired(false);
+
+    usersDAO.updateUser(updUserEntity);
+
+    Allure.step("open page", () -> Selenide.open("http://127.0.0.1:3000/main"));
+    $("a[href*='redirect']").click();
+    $("input[name='username']").setValue(updUserEntity.getUsername());
+    $("input[name='password']").setValue(updUserEntity.getPassword());
+    $("button[type='submit']").click();
+
+    $("p[class='form__error']").should(visible);
+  }
+
+  @GenerateUser(
+          username = "igor",
+          password = "12345"
+  )
+  @Test
+  void checkDeleteUser(UserEntity user){
+
+    usersDAO.deleteUser(usersDAO.getUserId(user.getUsername()));
+
+    Allure.step("open page", () -> Selenide.open("http://127.0.0.1:3000/main"));
+    $("a[href*='redirect']").click();
+    $("input[name='username']").setValue(user.getUsername());
+    $("input[name='password']").setValue(user.getPassword());
+    $("button[type='submit']").click();
+
+    $("p[class='form__error']").should(visible);
+  }
+
+  @GenerateUser(
+          username = "igor",
+          password = "12345"
+  )
+  @Test
+  void checkReadUser(UserEntity user){
+
+    UserEntity readUser = usersDAO.readUser(usersDAO.getUserId(user.getUsername()));
+    Assertions.assertEquals(user.getId(),readUser.getId());
+    Assertions.assertEquals(user.getUsername(),readUser.getUsername());
+  }
 }
