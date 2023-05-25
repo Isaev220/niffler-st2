@@ -14,4 +14,5 @@ public interface NifflerUsersDAO {
 
   int removeUser(UserEntity user);
 
+  int updateUser(UserEntity user);
 }

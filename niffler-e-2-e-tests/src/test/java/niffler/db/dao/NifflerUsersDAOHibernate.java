@@ -4,6 +4,10 @@ import niffler.db.ServiceDB;
 import niffler.db.entity.UserEntity;
 import niffler.db.jpa.EmfProvider;
 import niffler.db.jpa.JpaTransactionManager;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.UUID;
 
 public class NifflerUsersDAOHibernate extends JpaTransactionManager implements NifflerUsersDAO {
 
@@ -30,6 +34,13 @@ public class NifflerUsersDAOHibernate extends JpaTransactionManager implements N
   @Override
   public int removeUser(UserEntity user) {
     remove(user);
+    return 0;
+  }
+
+  @Override
+  public int updateUser(UserEntity user) {
+    merge(user);
+    merge(user);
     return 0;
   }
 }

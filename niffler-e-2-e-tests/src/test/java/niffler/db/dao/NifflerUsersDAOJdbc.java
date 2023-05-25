@@ -119,4 +119,28 @@ public class NifflerUsersDAOJdbc implements NifflerUsersDAO {
     }
     return executeUpdate;
   }
+
+  @Override
+  public int updateUser(UserEntity user) {
+    int executeUpdate;
+
+    try (Connection conn = ds.getConnection();
+         PreparedStatement st1 = conn.prepareStatement("UPDATE users SET "
+                 + "(username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)="
+                 + "(?, ?, ?, ?, ?, ?) WHERE id=(?)")) {
+      st1.setString(1, user.getUsername());
+      st1.setString(2, pe.encode(user.getPassword()));
+      st1.setBoolean(3, user.getEnabled());
+      st1.setBoolean(4, user.getAccountNonExpired());
+      st1.setBoolean(5, user.getAccountNonLocked());
+      st1.setBoolean(6, user.getCredentialsNonExpired());
+      st1.setObject(7, user.getId());
+
+      executeUpdate = st1.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return executeUpdate;
+  }
 }
