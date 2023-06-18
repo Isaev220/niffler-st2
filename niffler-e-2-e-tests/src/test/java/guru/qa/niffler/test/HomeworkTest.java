@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static com.codeborne.selenide.Selenide.$;
 
 public class HomeworkTest extends BaseWebTest{
 
@@ -50,6 +49,61 @@ public class HomeworkTest extends BaseWebTest{
     @Test
     void loginTest(){
         page.signIn(ue.getUsername(), TEST_PWD)
+                .checkThatPageLoaded();
+
+    }
+    @Test
+    void goToProfileTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToProfilePage()
+                .checkThatPageLoaded();
+
+    }
+    @Test
+    void closeAvatarIconTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToProfilePage()
+                .checkThatPageLoaded()
+                .CloseAvatarIconIsOnPage();
+
+    }
+    @Test
+    void goToProfileAndCreateNewCategoryTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToProfilePage()
+                .addNewCategory("abracadabra");
+
+    }
+    @Test
+    void goToProfileAndGoToMainTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToProfilePage()
+                .checkThatPageLoaded()
+                .getHeader()
+                .goToMainPage()
+                .checkThatPageLoaded();
+
+    }
+    @Test
+    void goToFriendsTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToFriendsPage()
+                .checkThatPageLoaded();
+
+    }
+    @Test
+    void goToFriendsAndGoToMainTest(){
+        page.signIn(ue.getUsername(), TEST_PWD)
+                .getHeader()
+                .goToFriendsPage()
+                .checkThatPageLoaded()
+                .getHeader()
+                .goToMainPage()
                 .checkThatPageLoaded();
 
     }

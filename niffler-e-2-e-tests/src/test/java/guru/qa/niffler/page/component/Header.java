@@ -7,6 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.BaseComponent;
 import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.page.ProfilePage;
 
 public class Header extends BaseComponent<Header> {
 
@@ -16,6 +17,7 @@ public class Header extends BaseComponent<Header> {
 
   private final SelenideElement mainPageBtn = $("a[href*='main']");
   private final SelenideElement friendsPageBtn = $("a[href*='friends']");
+  private final SelenideElement profilePageBtn = $("a[href*='profile']");
 
   @Override
   public Header checkThatComponentDisplayed() {
@@ -31,5 +33,10 @@ public class Header extends BaseComponent<Header> {
   public MainPage goToMainPage() {
     mainPageBtn.click();
     return new MainPage();
+  }
+
+  public ProfilePage goToProfilePage() {
+    profilePageBtn.click();
+    return new ProfilePage();
   }
 }

@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage extends BasePage<LoginPage>{
-    public static final String URL = "http://127.0.0.1:3000/main";
+    public static final String URL = Config.getConfig().getFrontUrl();
     private final SelenideElement login = $("a[href*='redirect']");
     private final SelenideElement formHeader = $(".form__header");
     private final SelenideElement signInFormParagraph = $(byText(signIn));
