@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith({AllureJunit5.class, BrowserExtension.class, GenerateSpendExtension.class, ApiLoginExtension.class})
-public @interface WebTest {
+@ExtendWith({AllureJunit5.class})
+public @interface GrpcTest {
 
 }
